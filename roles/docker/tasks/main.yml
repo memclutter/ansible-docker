@@ -1,7 +1,10 @@
-- name: Docker installation
+- name: Docker installation [Debian]
   import_tasks: docker-debian.yml
-  when: ansible_facts['os_family']|lower == 'debian'
-
+  when: ansible_facts['lsb']['id']|lower == 'debian'
+- name: Docker installation [Ubuntu]
+  import_tasks: docker-ubuntu.yml
+  when: ansible_facts['lsb']['id']|lower == 'ubuntu'
+  
 - name: Ensure group "docker" exists
   ansible.builtin.group:
     name: docker

@@ -1,3 +1,6 @@
-- name: Bootstrap OS
+- name: Bootstrap OS [Debian]
   import_tasks: "bootstrap-debian.yml"
-  when: ansible_facts['os_family']|lower == 'debian'
+  when: ansible_facts['lsb']['id']|lower == 'debian'
+- name: Bootstrap OS [Ubuntu]
+  import_tasks: "bootstrap-ubuntu.yml"
+  when: ansible_facts['lsb']['id']|lower == 'ubuntu'
