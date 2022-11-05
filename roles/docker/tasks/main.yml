@@ -4,7 +4,10 @@
 - name: Docker installation [Ubuntu]
   import_tasks: docker-ubuntu.yml
   when: ansible_facts['lsb']['id']|lower == 'ubuntu'
-  
+- name: Docker installation [CentOS]
+  import_tasks: docker-centos.yml
+  when: ansible_facts['lsb']['id']|lower == 'centos'
+
 - name: Ensure group "docker" exists
   ansible.builtin.group:
     name: docker
