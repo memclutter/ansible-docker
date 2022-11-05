@@ -1,0 +1,19 @@
+- name: Docker installation
+  import_tasks: docker-debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Ensure group "docker" exists
+  ansible.builtin.group:
+    name: docker
+    state: present
+- name: Ensure user in docker group
+  ansible.builtin.user:
+    name: '{{ ansible_user }}'
+    groups: docker
+    append: yes
+# Install compose switch v1 to v2 https://github.com/docker/compose-switch
+- name: Install compose switch
+  ansible.builtin.get_url:
+    url: https://github.com/docker/compose-switch/releases/latest/download/docker-compose-linux-amd64
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'

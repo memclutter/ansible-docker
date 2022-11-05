@@ -1,0 +1,39 @@
+- name: Uninstall old versions
+  ansible.builtin.apt:
+    pkg:
+      - docker
+      - docker-engine 
+      - docker.io 
+      - containerd 
+      - runc
+    state: absent
+
+- name: Install dependencies
+  ansible.builtin.apt:
+    pkg:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+
+- name: Check GPG key
+  ansible.builtin.stat:
+    path: /etc/apt/keyrings/docker.gpg
+  register: docker_gpg
+- name: Download GPG key
+  ansible.builtin.shell: |
+    mkdir /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  when: not docker_gpg.stat.exists
+
+- name: Docker install
+  ansible.builtin.apt:
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+    update_cache: true
