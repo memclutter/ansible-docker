@@ -7,4 +7,5 @@
 # End of https://www.toptal.com/developers/gitignore/api/ansible
 
 inventory.yml
+.idea/
 venv/
